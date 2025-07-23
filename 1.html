@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SocialConnect | Social Media Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #f72585;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+            --gray: #adb5bd;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --bg-gradient: linear-gradient(135deg, #4361ee, #3a0ca3, #7209b7);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr 350px;
+            gap: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            grid-column: 1 / -1;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .logo i {
+            color: var(--accent);
+        }
+
+        .search-bar {
+            flex: 1;
+            margin: 0 40px;
+            position: relative;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 50px;
+            border: 2px solid #e9ecef;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-icon {
+            position: relative;
+            font-size: 1.4rem;
+            color: var(--dark);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-icon:hover {
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 20px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+            height: fit-content;
+        }
+
+        .sidebar-section {
+            margin-bottom: 30px;
+        }
+
+        .sidebar-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .menu-item i {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .trending-tag {
+            display: inline-block;
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 50px;
+            margin: 0 5px 10px 0;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .trending-tag:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .create-post {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .post-input {
+            flex: 1;
+            position: relative;
+        }
+
+        .post-input textarea {
+            width: 100%;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 15px;
+            resize: none;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .post-input textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .emoji-picker {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--gray);
+            transition: all 0.3s;
+        }
+
+        .emoji-picker:hover {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .emoji-container {
+            position: absolute;
+            bottom: 50px;
+            right: 0;
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 250px;
+            display: none;
+            z-index: 100;
+        }
+
+        .emoji-container.active {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+        }
+
+        .emoji {
+            font-size: 1.5rem;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .emoji:hover {
+            transform: scale(1.2);
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .action-icons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .action-icon {
+            color: var(--gray);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .action-icon:hover {
+            color: var(--primary);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .post-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .post-btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        .feed {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .feed-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .feed-filter {
+            display: flex;
+            gap: 15px;
+        }
+
+        .filter-btn {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .post-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .post-card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .post-author {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .post-time {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .post-content {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .post-image {
+            width: 100%;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            height: 300px;
+            background: linear-gradient(to right, #4361ee, #4cc9f0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            overflow: hidden;
+        }
+
+        .post-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-stats {
+            display: flex;
+            justify-content: space-between;
+            color: var(--gray);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .post-actions-container {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border-radius: 8px;
+        }
+
+        .post-action:hover {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        .post-action.active {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+        }
+
+        /* Right Sidebar Styles */
+        .right-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .events {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        }
+
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .event-item {
+            display: flex;
+            gap: 15px;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .event-item:last-child {
+            border-bottom: none;
+        }
+
+        .event-date {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        .event-day {
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .event-month {
+            font-size: 0.8rem;
+        }
+
+        .event-details {
+            flex: 1;
+        }
+
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .event-time {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .suggestions {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 0;
+        }
+
+        .suggestion-item:not(:last-child) {
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .suggestion-info {
+            flex: 1;
+        }
+
+        .suggestion-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .suggestion-mutual {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .follow-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .follow-btn:hover {
+            background: var(--secondary);
+        }
+
+        .jobs {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+        }
+
+        .job-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .job-item:last-child {
+            border-bottom: none;
+        }
+
+        .job-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .job-company {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .job-location {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .job-type {
+            display: inline-block;
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+
+        /* Animations */
+        @keyframes gradientBG {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4) }
+            70% { box-shadow: 0 0 0 12px rgba(67, 97, 238, 0) }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0) }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1100px) {
+            .container {
+                grid-template-columns: 1fr 350px;
+            }
+            .sidebar {
+                grid-column: 1 / -1;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .right-sidebar {
+                grid-column: 1 / -1;
+            }
+            .nav-icons {
+                display: none;
+            }
+            .search-bar {
+                margin: 0 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-globe-americas"></i>
+                <span>SocialConnect</span>
+            </div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search for friends, posts, or topics...">
+            </div>
+            <div class="nav-icons">
+                <div class="nav-icon">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">5</span>
+                </div>
+                <div class="nav-icon">
+                    <i class="fas fa-envelope"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">A</div>
+                <div>
+                    <div class="user-name">Ayush</div>
+                    <div class="user-title">Content Creator</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Menu</h3>
+                <div class="menu-item active" data-section="home">
+                    <i class="fas fa-home"></i>
+                    <span>Home Feed</span>
+                </div>
+                <div class="menu-item" data-section="network">
+                    <i class="fas fa-user-friends"></i>
+                    <span>My Network</span>
+                </div>
+                <div class="menu-item" data-section="videos">
+                    <i class="fas fa-video"></i>
+                    <span>Videos</span>
+                </div>
+                <div class="menu-item" data-section="events">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Events</span>
+                </div>
+                <div class="menu-item" data-section="bookmarks">
+                    <i class="fas fa-bookmark"></i>
+                    <span>Bookmarks</span>
+                </div>
+                <div class="menu-item" data-section="jobs">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Jobs</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">My Groups</h3>
+                <div class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Creative Designers</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Web Developers</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Photography Club</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-users"></i>
+                    <span>Travel Enthusiasts</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">Trending Topics</h3>
+                <div>
+                    <span class="trending-tag">#WebDesign</span>
+                    <span class="trending-tag">#UXUI</span>
+                    <span class="trending-tag">#CreativeCoding</span>
+                    <span class="trending-tag">#DigitalArt</span>
+                    <span class="trending-tag">#Inspiration</span>
+                    <span class="trending-tag">#TechNews</span>
+                    <span class="trending-tag">#StartupLife</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="create-post">
+                <div class="post-header">
+                    <div class="user-avatar" style="background-color: #f72585;">A</div>
+                    <div class="post-input">
+                        <textarea placeholder="What's on your mind, Ayush?" id="post-text"></textarea>
+                        <div class="emoji-picker" id="emoji-picker">
+                            <i class="far fa-smile"></i>
+                        </div>
+                        <div class="emoji-container" id="emoji-container">
+                            <div class="emoji">😀</div>
+                            <div class="emoji">😂</div>
+                            <div class="emoji">😍</div>
+                            <div class="emoji">🤩</div>
+                            <div class="emoji">😎</div>
+                            <div class="emoji">👍</div>
+                            <div class="emoji">👏</div>
+                            <div class="emoji">🙌</div>
+                            <div class="emoji">🎉</div>
+                            <div class="emoji">💯</div>
+                            <div class="emoji">🔥</div>
+                            <div class="emoji">✨</div>
+                            <div class="emoji">💪</div>
+                            <div class="emoji">❤️</div>
+                            <div class="emoji">💡</div>
+                            <div class="emoji">🚀</div>
+                            <div class="emoji">👀</div>
+                            <div class="emoji">🙏</div>
+                            <div class="emoji">😊</div>
+                            <div class="emoji">🤔</div>
+                            <div class="emoji">😮</div>
+                            <div class="emoji">🤯</div>
+                            <div class="emoji">🥳</div>
+                            <div class="emoji">😎</div>
+                            <div class="emoji">🤝</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="post-actions">
+                    <div class="action-icons">
+                        <div class="action-icon" id="photo-upload">
+                            <i class="fas fa-image"></i>
+                            <input type="file" id="photo-input" class="file-input" accept="image/*">
+                        </div>
+                        <div class="action-icon" id="video-upload">
+                            <i class="fas fa-video"></i>
+                            <input type="file" id="video-input" class="file-input" accept="video/*">
+                        </div>
+                    </div>
+                    <button class="post-btn pulse" id="post-button">Post</button>
+                </div>
+            </div>
+
+            <div class="feed" id="feed-section">
+                <div class="feed-header">
+                    <h2 class="feed-title">Recent Posts</h2>
+                    <div class="feed-filter">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="popular">Popular</button>
+                        <button class="filter-btn" data-filter="following">Following</button>
+                    </div>
+                </div>
+
+                <div class="post-card" data-type="all following">
+                    <div class="post-card-header">
+                        <div class="user-avatar" style="background-color: #4cc9f0;">P</div>
+                        <div>
+                            <div class="post-author">Shashank</div>
+                            <div class="post-time">2 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        Just launched my new portfolio website! What do you think? Would love to get some feedback from the design community. #WebDesign #Portfolio #Creative
+                    </div>
+                    <div class="post-image">
+                        <img src="https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80" alt="Portfolio Design">
+                    </div>
+                    <div class="post-stats">
+                        <div>128 Likes</div>
+                        <div>42 Comments</div>
+                        <div>7 Shares</div>
+                    </div>
+                    <div class="post-actions-container">
+                        <div class="post-action">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span>Like</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-comment"></i>
+                            <span>Comment</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="post-card" data-type="all popular">
+                    <div class="post-card-header">
+                        <div class="user-avatar" style="background-color: #7209b7;">R</div>
+                        <div>
+                            <div class="post-author">Vebhav</div>
+                            <div class="post-time">5 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        Check out this amazing color palette generator I discovered! Perfect for UI designers looking for fresh inspiration. What are your favorite tools for design? 😍 #DesignTools #UIUX #Creative
+                    </div>
+                    <div class="post-image">
+                        <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1160&q=80" alt="Color Palette">
+                    </div>
+                    <div class="post-stats">
+                        <div>89 Likes</div>
+                        <div>31 Comments</div>
+                        <div>4 Shares</div>
+                    </div>
+                    <div class="post-actions-container">
+                        <div class="post-action">
+                            <i class="fas fa-thumbs-up"></i>
+                            <span>Like</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-comment"></i>
+                            <span>Comment</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Network Section -->
+            <div class="feed" id="network-section" style="display: none;">
+                <div class="feed-header">
+                    <h2 class="feed-title">My Network</h2>
+                </div>
+                
+                <div class="post-card">
+                    <div class="post-card-header">
+                        <div class="user-avatar" style="background-color: #3a0ca3;">S</div>
+                        <div>
+                            <div class="post-author">Raman</div>
+                            <div class="post-time">UI/UX Designer</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        12 mutual connections
+                    </div>
+                    <div class="post-actions-container">
+                        <div class="post-action">
+                            <i class="fas fa-comment"></i>
+                            <span>Message</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-user-friends"></i>
+                            <span>Unfollow</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="post-card">
+                    <div class="post-card-header">
+                        <div class="user-avatar" style="background-color: #f72585;">N</div>
+                        <div>
+                            <div class="post-author">Aryan</div>
+                            <div class="post-time">Frontend Developer</div>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        8 mutual connections
+                    </div>
+                    <div class="post-actions-container">
+                        <div class="post-action">
+                            <i class="fas fa-comment"></i>
+                            <span>Message</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-user-friends"></i>
+                            <span>Unfollow</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Jobs Section -->
+            <div class="feed" id="jobs-section" style="display: none;">
+                <div class="feed-header">
+                    <h2 class="feed-title">Job Recommendations</h2>
+                </div>
+                
+                <div class="post-card">
+                    <div class="post-card-header">
+                        <div class="user-avatar" style="background-color: #4361ee;">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div>
+                            <div class="post-author">Creative Solutions Ltd</div>
+                            <div class="post-time">Posted 2 days ago</div>
+                        </div>
+                    </div>
+                    <div class="job-item">
+                        <div class="job-title">Senior UI/UX Designer</div>
+                        <div class="job-company">Creative Solutions Ltd</div>
+                        <div class="job-location">Mumbai, India • Remote</div>
+                        <div class="job-type">Full-time</div>
+                    </div>
+                    <div class="post-actions-container">
+                        <div class="post-action">
+                            <i class="fas fa-save"></i>
+                            <span>Save</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </div>
+                        <button class="post-btn">Apply</button>
+                    </div>
+                </div>
+                
+                <div class="post-card">
+                    <div class="post-card-header">
+                        <div class="user-avatar" style="background-color: #4cc9f0;">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div>
+                            <div class="post-author">Tech Innovations Inc</div>
+                            <div class="post-time">Posted 5 days ago</div>
+                        </div>
+                    </div>
+                    <div class="job-item">
+                        <div class="job-title">Frontend Developer (React)</div>
+                        <div class="job-company">Tech Innovations Inc</div>
+                        <div class="job-location">Bangalore, India • Hybrid</div>
+                        <div class="job-type">Full-time</div>
+                    </div>
+                    <div class="post-actions-container">
+                        <div class="post-action">
+                            <i class="fas fa-save"></i>
+                            <span>Save</span>
+                        </div>
+                        <div class="post-action">
+                            <i class="fas fa-share"></i>
+                            <span>Share</span>
+                        </div>
+                        <button class="post-btn">Apply</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="events">
+                <div class="events-header">
+                    <h3 class="sidebar-title">Upcoming Events</h3>
+                    <i class="fas fa-plus" id="add-event"></i>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">
+                        <div class="event-day">24</div>
+                        <div class="event-month">JUL</div>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-title">Design Conference 2023</div>
+                        <div class="event-time">10:00 AM - 6:00 PM</div>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">
+                        <div class="event-day">28</div>
+                        <div class="event-month">JUL</div>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-title">Web Development Workshop</div>
+                        <div class="event-time">2:00 PM - 5:00 PM</div>
+                    </div>
+                </div>
+                <div class="event-item">
+                    <div class="event-date">
+                        <div class="event-day">03</div>
+                        <div class="event-month">AUG</div>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-title">Creative Meetup</div>
+                        <div class="event-time">6:00 PM - 9:00 PM</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="suggestions">
+                <h3 class="sidebar-title">People You May Know</h3>
+                <div class="suggestion-item">
+                    <div class="user-avatar" style="background-color: #3a0ca3;">S</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">Raman</div>
+                        <div class="suggestion-mutual">12 mutual friends</div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+                <div class="suggestion-item">
+                    <div class="user-avatar" style="background-color: #f72585;">N</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">Aryan</div>
+                        <div class="suggestion-mutual">8 mutual friends</div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+                <div class="suggestion-item">
+                    <div class="user-avatar" style="background-color: #4cc9f0;">V</div>
+                    <div class="suggestion-info">
+                        <div class="suggestion-name">Piyush</div>
+                        <div class="suggestion-mutual">5 mutual friends</div>
+                    </div>
+                    <button class="follow-btn">Follow</button>
+                </div>
+            </div>
+            
+            <div class="jobs">
+                <h3 class="sidebar-title">Featured Jobs</h3>
+                <div class="job-item">
+                    <div class="job-title">Product Designer</div>
+                    <div class="job-company">DesignHub</div>
+                    <div class="job-location">Remote</div>
+                    <div class="job-type">Full-time</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">React Developer</div>
+                    <div class="job-company">TechStart</div>
+                    <div class="job-location">Delhi, India</div>
+                    <div class="job-type">Full-time</div>
+                </div>
+                <div class="job-item">
+                    <div class="job-title">Content Strategist</div>
+                    <div class="job-company">Creative Media</div>
+                    <div class="job-location">Mumbai, India</div>
+                    <div class="job-type">Contract</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Event Modal -->
+    <div class="modal" id="event-modal">
+        <div class="modal-content">
+            <div class="close-modal" id="close-event-modal">&times;</div>
+            <h2>Add New Event</h2>
+            <form id="event-form">
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Event Title</label>
+                    <input type="text" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                </div>
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Date</label>
+                    <input type="date" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                </div>
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Time</label>
+                    <input type="time" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd;">
+                </div>
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600;">Description</label>
+                    <textarea style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ddd; min-height: 100px;"></textarea>
+                </div>
+                <button type="submit" style="background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 10px;">Create Event</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Emoji Picker Functionality
+        const emojiPicker = document.getElementById('emoji-picker');
+        const emojiContainer = document.getElementById('emoji-container');
+        const postText = document.getElementById('post-text');
+        
+        emojiPicker.addEventListener('click', () => {
+            emojiContainer.classList.toggle('active');
+        });
+        
+        document.querySelectorAll('.emoji').forEach(emoji => {
+            emoji.addEventListener('click', () => {
+                postText.value += emoji.textContent;
+            });
+        });
+        
+        // Close emoji picker when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!emojiPicker.contains(e.target) && !emojiContainer.contains(e.target)) {
+                emojiContainer.classList.remove('active');
+            }
+        });
+        
+        // Photo Upload Functionality
+        const photoUpload = document.getElementById('photo-upload');
+        const photoInput = document.getElementById('photo-input');
+        
+        photoUpload.addEventListener('click', () => {
+            photoInput.click();
+        });
+        
+        photoInput.addEventListener('change', () => {
+            if (photoInput.files.length > 0) {
+                alert(`Photo selected: ${photoInput.files[0].name}`);
+            }
+        });
+        
+        // Video Upload Functionality
+        const videoUpload = document.getElementById('video-upload');
+        const videoInput = document.getElementById('video-input');
+        
+        videoUpload.addEventListener('click', () => {
+            videoInput.click();
+        });
+        
+        videoInput.addEventListener('change', () => {
+            if (videoInput.files.length > 0) {
+                alert(`Video selected: ${videoInput.files[0].name}`);
+            }
+        });
+        
+        // Post Creation
+        const postButton = document.getElementById('post-button');
+        
+        postButton.addEventListener('click', () => {
+            if (postText.value.trim() !== '') {
+                alert('Post created successfully!');
+                postText.value = '';
+            } else {
+                alert('Please write something to post!');
+            }
+        });
+        
+        // Feed Filtering
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const filter = button.getAttribute('data-filter');
+                const posts = document.querySelectorAll('.post-card');
+                
+                posts.forEach(post => {
+                    if (filter === 'all' || post.getAttribute('data-type').includes(filter)) {
+                        post.style.display = 'block';
+                    } else {
+                        post.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Navigation
+        const menuItems = document.querySelectorAll('.menu-item');
+        const sections = {
+            'home': document.getElementById('feed-section'),
+            'network': document.getElementById('network-section'),
+            'jobs': document.getElementById('jobs-section')
+        };
+        
+        menuItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active class from all menu items
+                menuItems.forEach(menuItem => menuItem.classList.remove('active'));
+                // Add active class to clicked menu item
+                item.classList.add('active');
+                
+                // Hide all sections
+                Object.values(sections).forEach(section => {
+                    if (section) section.style.display = 'none';
+                });
+                
+                // Show selected section
+                const sectionId = item.getAttribute('data-section');
+                if (sections[sectionId]) {
+                    sections[sectionId].style.display = 'block';
+                }
+            });
+        });
+        
+        // Events Modal
+        const addEventBtn = document.getElementById('add-event');
+        const eventModal = document.getElementById('event-modal');
+        const closeEventModal = document.getElementById('close-event-modal');
+        const eventForm = document.getElementById('event-form');
+        
+        addEventBtn.addEventListener('click', () => {
+            eventModal.style.display = 'flex';
+        });
+        
+        closeEventModal.addEventListener('click', () => {
+            eventModal.style.display = 'none';
+        });
+        
+        eventForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Event created successfully!');
+            eventModal.style.display = 'none';
+        });
+        
+        // Like Functionality
+        document.querySelectorAll('.post-action').forEach(action => {
+            action.addEventListener('click', function() {
+                if (this.querySelector('i').classList.contains('fa-thumbs-up')) {
+                    this.classList.toggle('active');
+                    
+                    if (this.classList.contains('active')) {
+                        this.innerHTML = '<i class="fas fa-thumbs-up"></i> <span>Liked</span>';
+                    } else {
+                        this.innerHTML = '<i class="fas fa-thumbs-up"></i> <span>Like</span>';
+                    }
+                }
+            });
+        });
+        
+        // Follow Functionality
+        document.querySelectorAll('.follow-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.textContent === 'Follow') {
+                    this.textContent = 'Following';
+                    this.style.background = '#adb5bd';
+                } else {
+                    this.textContent = 'Follow';
+                    this.style.background = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
