@@ -3,95 +3,134 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Crypto & NFT Price List</title>
+  <title>Crypto & NFT Prices</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    const MARKUP_RATE = 0.10; // 10%
-    const TELEGRAM_USERNAME = "SHASHANKsv10_01";
-
-    const cryptoList = {
-      "Bitcoin (BTC)": "bitcoin",
-      "Ethereum (ETH)": "ethereum",
-      "Tether (USDT)": "tether",
-      "BNB (BNB)": "binancecoin",
-      "Solana (SOL)": "solana",
-      "Ripple (XRP)": "ripple",
-      "Cardano (ADA)": "cardano",
-      "Dogecoin (DOGE)": "dogecoin",
-      "Polygon (MATIC)": "matic-network",
-      "TRON (TRX)": "tron",
-      "Litecoin (LTC)": "litecoin",
-      "Pepe (PEPE)": "pepe",
-      "Shiba Inu (SHIB)": "shiba-inu",
-      "Chainlink (LINK)": "chainlink",
-      "Aptos (APT)": "aptos",
-      "Arbitrum (ARB)": "arbitrum",
-      "The Sandbox (SAND)": "the-sandbox",
-      "Decentraland (MANA)": "decentraland",
-      "Axie Infinity (AXS)": "axie-infinity"
-    };
-
-    function calculatePrice(base) {
-      return Math.round(base * (1 + MARKUP_RATE));
+  <style>
+    .active-tab {
+      background-color: #2563eb;
+      color: white;
     }
-
-    async function fetchPrices() {
-      const ids = Object.values(cryptoList).join(",");
-      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=inr`);
-      const data = await res.json();
-
-      const prices = {};
-      for (const [label, id] of Object.entries(cryptoList)) {
-        const base = data[id]?.inr;
-        if (base) prices[label] = base;
-      }
-
-      return prices;
-    }
-
-    function renderPrices(containerId, data) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-      for (const [label, base] of Object.entries(data)) {
-        const final = calculatePrice(base);
-        const div = document.createElement("div");
-        div.className = "flex justify-between py-2 border-b text-sm md:text-base hover:bg-gray-100 cursor-pointer px-2 rounded";
-        div.onclick = () => {
-          const message = encodeURIComponent(`Hi, I'm interested in buying "${label}" at INR ${final.toLocaleString()}.`);
-          const link = `https://t.me/${TELEGRAM_USERNAME}?text=${message}`;
-          window.open(link, "_blank");
-        };
-        div.innerHTML = `<span>${label}</span><span>INR ${final.toLocaleString()}</span>`;
-        container.appendChild(div);
-      }
-    }
-
-    async function updatePrices() {
-      const prices = await fetchPrices();
-      renderPrices("crypto-prices", prices);
-    }
-
-    window.onload = () => {
-      updatePrices();
-      setInterval(updatePrices, 60000); // refresh every 60 seconds
-    };
-  </script>
+  </style>
 </head>
-<body class="bg-white text-gray-900">
-  <div class="max-w-3xl mx-auto p-6">
-    <h1 class="text-2xl font-bold text-center mb-6">📈 Crypto & NFT Prices</h1>
+<body class="bg-gray-900 text-white min-h-screen">
+  <div class="max-w-6xl mx-auto px-4 py-10">
+    <h1 class="text-3xl md:text-4xl font-bold text-center mb-4">📈 Live Crypto & NFT Prices</h1>
+    <p class="text-center text-gray-400 mb-8">Search or filter, then click any item to buy via Telegram.</p>
 
-    <section class="mb-10">
-      <h2 class="text-lg font-semibold border-b pb-2">🪙 Tap to Buy</h2>
-      <div id="crypto-prices" class="mt-3"></div>
-    </section>
+    <!-- Search & Filter -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <input
+        type="text"
+        id="search"
+        placeholder="Search coins or NFTs..."
+        class="w-full md:w-1/2 px-4 py-2 rounded-lg bg-gray-800 text-white border border-gray-600"
+        oninput="filterDisplay()"
+      />
+      <div class="flex gap-2 mt-2 md:mt-0">
+        <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-sm" onclick="setCategory('all')">All</button>
+        <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-sm" onclick="setCategory('coin')">Coins</button>
+        <button class="tab-btn px-4 py-2 rounded-lg bg-gray-700 text-sm" onclick="setCategory('nft')">NFTs</button>
+      </div>
+    </div>
 
+    <!-- Coin Grid -->
+    <div id="crypto-prices" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+
+    <!-- Telegram CTA -->
     <div class="text-center mt-10">
+      <p class="text-sm text-gray-400 mb-4">
+        Want something not listed here? Contact me on Telegram and I’ll make it available!
+      </p>
       <a href="https://t.me/SHASHANKsv10_01" target="_blank"
          class="bg-blue-600 text-white px-6 py-3 rounded-full shadow hover:bg-blue-700 transition">
         💬 Contact on Telegram
       </a>
     </div>
   </div>
+
+  <script>
+    const MARKUP = 0.10;
+    const TELEGRAM_USERNAME = "SHASHANKsv10_01";
+    let selectedCategory = "all";
+
+    const assets = [
+      { name: "Bitcoin (BTC)", id: "bitcoin", type: "coin" },
+      { name: "Ethereum (ETH)", id: "ethereum", type: "coin" },
+      { name: "Tether (USDT)", id: "tether", type: "coin" },
+      { name: "BNB (BNB)", id: "binancecoin", type: "coin" },
+      { name: "Solana (SOL)", id: "solana", type: "coin" },
+      { name: "Ripple (XRP)", id: "ripple", type: "coin" },
+      { name: "Cardano (ADA)", id: "cardano", type: "coin" },
+      { name: "Dogecoin (DOGE)", id: "dogecoin", type: "coin" },
+      { name: "Polygon (MATIC)", id: "matic-network", type: "coin" },
+      { name: "TRON (TRX)", id: "tron", type: "coin" },
+      { name: "Litecoin (LTC)", id: "litecoin", type: "coin" },
+      { name: "Pepe (PEPE)", id: "pepe", type: "nft" },
+      { name: "Shiba Inu (SHIB)", id: "shiba-inu", type: "nft" },
+      { name: "Axie Infinity (AXS)", id: "axie-infinity", type: "nft" },
+      { name: "The Sandbox (SAND)", id: "the-sandbox", type: "nft" },
+      { name: "Decentraland (MANA)", id: "decentraland", type: "nft" },
+      { name: "Chainlink (LINK)", id: "chainlink", type: "coin" },
+      { name: "Aptos (APT)", id: "aptos", type: "coin" },
+      { name: "Arbitrum (ARB)", id: "arbitrum", type: "coin" },
+      { name: "THORChain (RUNE)", id: "thorchain", type: "coin" }
+    ];
+
+    let livePrices = {};
+
+    async function fetchPrices() {
+      const ids = assets.map(a => a.id).join(",");
+      const res = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=inr`);
+      const data = await res.json();
+      assets.forEach(asset => {
+        const base = data[asset.id]?.inr;
+        if (base) livePrices[asset.name] = Math.round(base * (1 + MARKUP));
+      });
+      filterDisplay();
+    }
+
+    function setCategory(cat) {
+      selectedCategory = cat;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active-tab'));
+      const index = ['all', 'coin', 'nft'].indexOf(cat);
+      document.querySelectorAll('.tab-btn')[index].classList.add('active-tab');
+      filterDisplay();
+    }
+
+    function filterDisplay() {
+      const container = document.getElementById("crypto-prices");
+      const query = document.getElementById("search").value.toLowerCase();
+      container.innerHTML = "";
+
+      assets.forEach(asset => {
+        const matchCategory = selectedCategory === "all" || asset.type === selectedCategory;
+        const matchSearch = asset.name.toLowerCase().includes(query);
+        if (!matchCategory || !matchSearch) return;
+
+        const price = livePrices[asset.name];
+        if (!price) return;
+
+        const div = document.createElement("div");
+        div.className =
+          "bg-gray-800 text-white rounded-2xl p-4 shadow-md hover:shadow-xl transition hover:bg-gray-700 cursor-pointer";
+        div.onclick = () => {
+          const message = encodeURIComponent(`Hi, I'm interested in buying "${asset.name}" at INR ${price.toLocaleString()}.`);
+          const link = `https://t.me/${TELEGRAM_USERNAME}?text=${message}`;
+          window.open(link, "_blank");
+        };
+        div.innerHTML = `
+          <div class="flex justify-between items-center">
+            <div class="font-medium">${asset.name}</div>
+            <div class="text-lg font-semibold">₹ ${price.toLocaleString()}</div>
+          </div>`;
+        container.appendChild(div);
+      });
+    }
+
+    window.onload = () => {
+      fetchPrices();
+      setInterval(fetchPrices, 60000);
+    };
+  </script>
 </body>
 </html>
